@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.Double?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onKeyPressed="#collectFigures" onKeyReleased="#onKeyReleased" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.cn.al.teach.figures.controllers.MainController">
+   <children>
+      <Canvas fx:id="cnvs" height="575.0" onMouseDragged="#drawShape" onMouseExited="#deleteCoordinates" onMouseMoved="#showCoordinates" onMousePressed="#startDraw" onMouseReleased="#finishDraw" width="600.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="25.0" />
+      <AnchorPane layoutX="-3.0" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar maxHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+         </children>
+      </AnchorPane>
+      <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+         <children>
+            <Accordion AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <panes>
+                <TitledPane animated="false" maxWidth="210.0" minWidth="210.0" prefWidth="210.0" text="Draw">
+                  <content>
+                    <AnchorPane prefWidth="210.0">
+                           <children>
+                              <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="210.0">
+                                       <children>
+                                          <Pane fx:id="pnLine" onMouseClicked="#chooseShape" prefHeight="90.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0">
+                                             <children>
+                                                <Line endX="180.0" endY="80.0" startX="10.0" startY="10.0" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnCurve" onMouseClicked="#chooseShape" prefHeight="90.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="100.0" />
+                                           
+                                          <Pane fx:id="pnCircle" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="200.0">
+                                             <children>
+                                                <Circle centerX="50.0" centerY="50.0" fill="DODGERBLUE" radius="40.0" stroke="BLACK" strokeType="INSIDE" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnEllipse" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
+                                             <children>
+                                                <Ellipse centerX="50.0" centerY="50.0" fill="DODGERBLUE" radiusX="50.0" radiusY="25.0" rotate="45.0" stroke="BLACK" strokeType="INSIDE" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnSquare" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="300.0">
+                                             <children>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="80.0" stroke="BLACK" strokeType="INSIDE" width="80.0" x="10.0" y="10.0" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnRectangle" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="300.0">
+                                             <children>
+                                                <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="50.0" stroke="BLACK" strokeType="INSIDE" width="80.0" x="10.0" y="25.0" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnTriangle" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="400.0">
+                                             <children>
+                                                <Polygon fill="DODGERBLUE" stroke="BLACK" strokeType="INSIDE">
+                                                  <points>
+                                                    <Double fx:value="10.0" />
+                                                    <Double fx:value="90.0" />
+                                                    <Double fx:value="50.0" />
+                                                    <Double fx:value="10.0" />
+                                                    <Double fx:value="90.0" />
+                                                    <Double fx:value="90.0" />
+                                                  </points>
+                                                </Polygon>
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnPolygon" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="400.0">
+                                             <children>
+                                                <Polygon fill="DODGERBLUE" stroke="BLACK" strokeType="INSIDE">
+                                                    <points>
+                                                        <Double fx:value="10.0" />
+                                                        <Double fx:value="90.0" />
+                                                        <Double fx:value="10.0" />
+                                                        <Double fx:value="50.0" />
+                                                        <Double fx:value="50.0" />
+                                                        <Double fx:value="10.0" />
+                                                        <Double fx:value="90.0" />
+                                                        <Double fx:value="90.0" />
+                                                    </points>
+                                                </Polygon>
+                                             </children>
+                                          </Pane>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                  </content>
+                </TitledPane>
+                <TitledPane animated="false" maxWidth="210.0" minWidth="210.0" text="Image">
+                     <content>
+                        <AnchorPane prefWidth="210.0">
+                           <children>
+                              <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                                 <content>
+                                <AnchorPane minWidth="210.0" prefHeight="180.0" prefWidth="210.0">
+                                       <children>
+                                          <Pane fx:id="pnSelect" layoutY="14.0" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="10.0">
+                                             <children>
+                                                <Label layoutX="34.0" layoutY="78.0" text="Select" />
+                                                <Rectangle fx:id="rctlSelect" arcHeight="1.0" fill="TRANSPARENT" height="50.0" stroke="BLACK" strokeLineCap="BUTT" strokeType="INSIDE" width="80.0" x="10.0" y="20.0" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnMove" layoutX="10.0" layoutY="24.0" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                                             <children>
+                                                <Label layoutX="34.0" layoutY="78.0" text="Move" />
+                                                <Line endX="90.0" endY="50.0" startX="10.0" startY="50.0" />
+                                                <Line endX="90.0" endY="50.0" startX="70.0" startY="40.0" />
+                                                <Line endX="90.0" endY="50.0" startX="70.0" startY="60.0" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnJoin" layoutY="80.0" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="110.0">
+                                             <children>
+                                                <Label layoutX="20.0" layoutY="78.0" text="Join/Unjoin" />
+                                                <Line endX="50.0" endY="70.0" startX="10.0" startY="30.0" />
+                                                <Line endX="50.0" endY="70.0" startX="30.0" startY="60.0" />
+                                                <Line endX="50.0" endY="70.0" startX="40.0" startY="50.0" />
+                                                <Line endX="50.0" endY="70.0" startX="90.0" startY="30.0" />
+                                                <Line endX="50.0" endY="70.0" startX="60.0" startY="50.0" />
+                                                <Line endX="50.0" endY="70.0" startX="70.0" startY="60.0" />
+                                             </children>
+                                          </Pane>
+                                          <Pane fx:id="pnOnTop" layoutX="100.0" layoutY="105.0" onMouseClicked="#chooseShape" prefHeight="100.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="110.0">
+                                             <children>
+                                                <Label layoutX="31.0" layoutY="78.0" text="On top" />
+                                                <Rectangle fx:id="rctlSelect1" arcHeight="1.0" fill="TRANSPARENT" height="17.0" stroke="BLACK" strokeLineCap="BUTT" strokeType="INSIDE" width="80.0" x="10.0" y="20.0" />
+                                                <Line endX="50.0" endY="40.0" startX="50.0" startY="80.0" />
+                                                <Line endX="50.0" endY="40.0" startX="30.0" startY="60.0" />
+                                                <Line endX="50.0" endY="40.0" startX="70.0" startY="60.0" />
+                                             </children>
+                                          </Pane>
+                                       </children>
+                                    </AnchorPane>
+                                 </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="untitled 3">
+                  <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="80.0" layoutY="400.0" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="210.0">
+         <children>
+            <Label fx:id="lblX" layoutX="65.0" layoutY="4.0" maxHeight="-Infinity" minWidth="50.0" prefWidth="50.0" text="X:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lblY" layoutX="75.0" layoutY="14.0" maxHeight="-Infinity" minWidth="50.0" prefWidth="50.0" text="Y:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="110.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
