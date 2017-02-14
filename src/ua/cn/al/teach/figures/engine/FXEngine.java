@@ -41,17 +41,16 @@ public class FXEngine implements GraphicsEngine {
 
     @Override
     public void strokeOval(double x, double y, double radiusX, double radiusY) {
-//        gc.strokeOval(x - radiusX, y - radiusY, radiusX*2, radiusY*2);
         gc.strokeArc(x-radiusX, y-radiusY, radiusX*2, radiusY*2, 0, 360, ArcType.OPEN);
     }
 
-    public void strokeCurve(double x1, double y1, double x2, double y2) {
-        gc.strokeArc(x2, y2, y2, y2, y2, x2, ArcType.CHORD);
-    }
+//    public void strokeCurve(double x1, double y1, double x2, double y2) {
+//        gc.strokeArc(x2, y2, y2, y2, y2, x2, ArcType.CHORD);
+//    }
 
     @Override
     public void setColor(RGBColor rgb) {
-        Color c = new Color(rgb.R, rgb.G, rgb.B, rgb.opacity);
+        Color c = new Color(rgb.getR(), rgb.getG(), rgb.getB(), rgb.getOpacity());
         gc.setStroke(c);
     }
 
@@ -67,7 +66,7 @@ public class FXEngine implements GraphicsEngine {
 
     @Override
     public void setFillColor(RGBColor rgb) {
-        Color c = new Color(rgb.R, rgb.G, rgb.B, rgb.opacity);
+        Color c = new Color(rgb.getR(), rgb.getG(), rgb.getB(), rgb.getOpacity());
         gc.setFill(c);        
     }
 }

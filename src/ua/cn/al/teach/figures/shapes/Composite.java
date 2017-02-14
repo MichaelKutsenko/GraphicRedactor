@@ -174,4 +174,17 @@ public class Composite extends Shape {
             s.setFocused(isFocused);
         }
     }
+
+    public void setColor(RGBColor color){
+        for (Shape s : shapes){
+            s.setColor(color);
+        }
+    }
+
+    @Override
+    public void setLineWidth(double lineWidth) {
+        for (Shape s : shapes){
+            s.setLineWidth(lineWidth);
+        }
+    }
 }

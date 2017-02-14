@@ -4,22 +4,22 @@
  */
 package ua.cn.al.teach.figures.engine;
 
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import ua.cn.al.teach.figures.shapes.Shape;
 
 import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  *
  * @author al
  */
-public class Graphics {
+public class Graphics extends Service {
+    private volatile static Graphics instance = null;
+    private HashMap<String, GraphicsEngine> configuredEngines = new HashMap<>();
+    private GraphicsEngine currentGE;
 
-    volatile static Graphics instance = null;
-    HashMap<String, GraphicsEngine> configuredEngines = new HashMap<>();
-    GraphicsEngine currentGE;
-    final int threadNumber = 4;
+    private Shape shape;
 
     private Graphics() {
     }
@@ -31,6 +31,27 @@ public class Graphics {
         return instance;
     }
 
+    @Override
+    protected Task createTask() {
+        Shape shape = getShape();
+
+        return new Task() {
+            @Override
+            protected Object call() {
+                show(shape);
+                return null;
+            }
+        };
+    }
+
+    public void clear(){
+        currentGE.clear();
+    }
+
+    public void show(Shape s){
+        s.show(currentGE);
+    }
+
     public void addEngine(GraphicsEngine ge, String name) {
         currentGE = ge;
         configuredEngines.put(name, ge);
@@ -40,47 +61,12 @@ public class Graphics {
         return currentGE;
     }
 
-    public void clear(){
-        currentGE.clear();
+
+    public Shape getShape() {
+        return shape;
     }
 
-    public void show(Shape s){
-            s.show(currentGE);
+    public void setShape(Shape shape) {
+        this.shape = shape;
     }
-
-    public void showAsync(final Shape s) {
-        ExecutorService executor = Executors.newFixedThreadPool(threadNumber);
-
-        executor.submit(new Runnable() {
-            @Override
-            public void run() {
-                synchronized(s){  
-                    show(s);
-                }
-            }
-        }
-        );
-        executor.shutdown();
-    }
-    int counter = 0;
-
-    public void showAsync(final Shape s, boolean isFinish) {
-        ExecutorService executor = Executors.newFixedThreadPool(threadNumber);
-
-        executor.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                System.out.println("start" + ++counter);
-                                synchronized(s){
-                                    show(s);
-                                    System.out.println("draw" + counter);
-                                }
-                                System.out.println("finish" + counter);
-                            }
-                        }
-        );
-        System.out.println("total threads:" + counter);
-//         executor.shutdown();
-    }
-
 }

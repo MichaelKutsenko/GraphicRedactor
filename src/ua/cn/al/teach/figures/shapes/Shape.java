@@ -22,18 +22,6 @@ public abstract class Shape extends Point {
     protected double lineWidth = 1;
     protected double dashLength = 0;
 
-//    public Shape() {
-//    }
-//
-//    public Shape(Point... points) {
-//        for (Point point : points)
-//            this.points.add(point);
-//    }
-//
-//    public Shape(List<Point> points) {
-//        this.points = points;
-//    }
-
     protected abstract void draw(GraphicsEngine ge);
     protected abstract boolean containedInField(Rectangle focusRect);
     protected abstract boolean containPoint(Point point);
@@ -42,7 +30,7 @@ public abstract class Shape extends Point {
         if (!isFocused){
             ge.setLineWidth(lineWidth);
         } else {
-            ge.setLineWidth(lineWidth * 3);
+            ge.setLineWidth(3);
         }
         ge.setColor(color);
         ge.setFillColor(fill);
@@ -58,8 +46,8 @@ public abstract class Shape extends Point {
         fill = c;
     }
 
-    public void setLineWidth(int lw) {
-        this.lineWidth = lw;
+    public void setLineWidth(double lineWidth) {
+        this.lineWidth = lineWidth;
     }
 
     public void setFocused(boolean focused) {

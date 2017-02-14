@@ -21,13 +21,16 @@ public class ShapeFactory {
         return instance;
     }
 
-    public Shape getShape(List<Point> points, ShapeType shape){
+    public Shape getShape(List<Point> points, ShapeType shape, double lineWidth, RGBColor color){
         try {
             if (ShapeType.Line == shape){
-                return new Line(points.get(0), points.get(1));
+                Line line = new Line(points.get(0), points.get(1));
+                setProperies(line, lineWidth, color);
+
+                return line;
             }
             else if (ShapeType.Rectangle == shape){
-                return createRectangle(points);
+                return createRectangle(points, lineWidth, color);
             }
             else if (ShapeType.Square == shape){
                 Point a = points.get(0);
@@ -51,11 +54,13 @@ public class ShapeFactory {
                 }
                 points.set(1, c);
 
-                return createRectangle(points);
+                return createRectangle(points, lineWidth, color);
             }
             else if (ShapeType.Polyline == shape ){
                 PolyLine polyline = new PolyLine();
                 polyline.PolyLine(points);
+
+                setProperies(polyline, lineWidth, color);
 
                 return polyline;
             }
@@ -65,14 +70,23 @@ public class ShapeFactory {
                     Point apex2 = new Point(points.get(1).getX(), points.get(0).getY());
                     Point apex3 = new Point(points.get(1).getX() - (points.get(1).getX() - points.get(0).getX()) /2, points.get(1).getY());
 
-                    return  new Triangle(apex1, apex2, apex3);
+                    Triangle triangle = new Triangle(apex1, apex2, apex3);
+                    setProperies(triangle, lineWidth, color);
+
+                    return  triangle;
                 }
                 else {
-                    return  new Triangle(points.get(0), points.get(1), points.get(2));
+                    Triangle triangle = new Triangle(points.get(0), points.get(1), points.get(2));
+                    setProperies(triangle, lineWidth, color);
+
+                    return  triangle;
                 }
             }
             else if (ShapeType.Polygon == shape ){
-                return new Polygon(points);
+                Polygon polygon = new Polygon(points);
+                setProperies(polygon, lineWidth, color);
+
+                return  polygon;
             }
             else if (ShapeType.Curve == shape) {
                 double x1 = points.get(0).getX();
@@ -116,11 +130,14 @@ public class ShapeFactory {
                 curve.setB(b);
                 curve.setC(c);
                 curve.setApex(apex);
+                setProperies(curve, lineWidth, color);
 
                 return curve;
             }
             else if (ShapeType.RectMarker == shape){
-                Rectangle rectangle = (Rectangle)createRectangle(points);
+                Rectangle rectangle = (Rectangle)createRectangle(points, lineWidth, color);
+                rectangle.setLineWidth(1);
+                rectangle.setColor(new RGBColor(0, 0, 0, 1));
                 rectangle.setMarker(true);
 
                 return rectangle;
@@ -130,14 +147,20 @@ public class ShapeFactory {
                 double radius = Math.sqrt((center.getX()-points.get(1).getX())*(center.getX()-points.get(1).getX()) +
                         (center.getY()-points.get(1).getY())*(center.getY()-points.get(1).getY()));
 
-                return new Circle(center, radius);
+                Circle circle = new Circle(center, radius);
+                setProperies(circle, lineWidth, color);
+
+                return circle;
             }
             else if (ShapeType.Ellipse == shape){
                 Point center = points.get(0);
                 double radiusX = Math.abs(center.getX() - points.get(1).getX());
                 double radiusY = Math.abs(center.getY() - points.get(1).getY());
 
-                return new Ellipse(center, radiusX, radiusY);
+                Ellipse ellipse = new Ellipse(center, radiusX, radiusY);
+                setProperies(ellipse, lineWidth, color);
+
+                return ellipse;
             }
             else return null;
         } catch (Exception e) {
@@ -146,7 +169,7 @@ public class ShapeFactory {
         }
     }
 
-    private Shape createRectangle(List<Point> points) {
+    private Shape createRectangle(List<Point> points, double lineWidth, RGBColor color) {
         Point a = points.get(0);
         Point c = points.get(1);
 
@@ -174,182 +197,14 @@ public class ShapeFactory {
         a = new Point(startX, startY);
         c = new Point(endX, endY);
 
-        return new Rectangle(a, c);
+        Rectangle rectangle = new Rectangle(a, c);
+        setProperies(rectangle, lineWidth, color);
+
+        return rectangle;
     }
 
-//    public PolyLine getPolyline(List<Point> points){
-//        try {
-//            PolyLine polyline = new PolyLine();
-//            polyline.PolyLine(points);
-//            return polyline;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    public PolyLine getPolyline(Point... points){
-//        try {
-//            List<Point> pointsList = new ArrayList<>();
-//            for (Point point : points){
-//                pointsList.add(point);
-//            }
-//            return getPolyline(pointsList);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    public Rectangle getRectangle(Point a, Point c){
-//        try {
-//            double startX;
-//            double startY;
-//
-//            double endX;
-//            double endY;
-//
-//            if (a.x <= c.x){
-//                startX = a.x;
-//                endX = c.x;
-//            }else {
-//                startX = c.x;
-//                endX = a.x;
-//            }
-//
-//            if (a.y <= c.y){
-//                startY = a.y;
-//                endY = c.y;
-//            }else {
-//                startY = c.y;
-//                endY = a.y;
-//            }
-//
-//            a = new Point(startX, startY);
-//            c = new Point(endX, endY);
-//
-//            return new Rectangle(a, c);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    public Rectangle getRectangle(List<Point> points){
-//        return getRectangle(points.get(0), points.get(1));
-//    }
-
-
-//    public Square getSquare(Point a, Point c){
-//        try {
-//            double xDiff = c.x - a.x;
-//            double yDiff = c.y - a.y;
-//
-//            if (Math.abs(xDiff) != Math.abs(yDiff)) {
-//                boolean isXBigger = Math.abs(xDiff) > Math.abs(yDiff);
-//
-//                if (isXBigger && (yDiff >= 0)){
-//                    c = new Point(c.x, a.y + Math.abs(xDiff));
-//                } else if (isXBigger && (yDiff < 0)){
-//                    c = new Point(c.x, a.y - Math.abs(xDiff));
-//                } else if (!isXBigger && (xDiff >= 0)){
-//                    c = new Point(a.x + Math.abs(yDiff), c.y);
-//                } else {
-//                    c = new Point(a.x - Math.abs(yDiff), c.y);
-//                }
-//            }
-//
-//            double startX;
-//            double startY;
-//            double endX;
-//            double endY;
-//
-//            if (a.x <= c.x){
-//                startX = a.x;
-//                endX = c.x;
-//            }else {
-//                startX = c.x;
-//                endX = a.x;
-//            }
-//
-//            if (a.y <= c.y){
-//                startY = a.y;
-//                endY = c.y;
-//            }else {
-//                startY = c.y;
-//                endY = a.y;
-//            }
-//
-//            a = new Point(startX, startY);
-//            c = new Point(endX, endY);
-//
-//            return new Square(a, c);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    public Square getSquare(List<Point> points){
-//        return getSquare(points.get(0), points.get(1));
-//    }
-
-//    public Polygon getPolygon(List<Point> points){
-//        try {
-//            points.add(points.get(0));
-//            Polygon polygon =  new Polygon();
-//            polygon.PolyLine(points);
-//
-//            return polygon;
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-//
-//    public Polygon getPolygon(Point... points){
-//        try {
-//            List<Point> pointsList = new ArrayList<>();
-//            for (Point point : points){
-//                pointsList.add(point);
-//            }
-//            return getPolygon(pointsList);
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    public Triangle getTriangle(List<Point> points){
-//        try {
-//            if (points.size() == 2){
-//                Point apesOne = points.get(0);
-//                Point apexTwo = new Point(points.get(1).getX(), points.get(0).getY());
-//                Point apexThree = new Point(points.get(1).getX() - (points.get(1).getX() - points.get(0).getX()) /2, points.get(1).getY());
-//
-//                return  new Triangle(apesOne, apexTwo, apexThree);
-//            }
-//            else if (points.size() == 3){
-//                return  new Triangle(points.get(0), points.get(1), points.get(2));
-//            }
-//            else new IndexOutOfBoundsException("Triangle can access only three apexes.");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//        return null;
-//    }
-//
-//    public Triangle getTriangle(Point... points){
-//        try {
-//            List<Point> pointsList = new ArrayList<>();
-//            for (Point point : points){
-//                pointsList.add(point);
-//            }
-//            return getTriangle(pointsList);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    private void setProperies(Shape shape, double lineWidth, RGBColor color){
+        shape.setLineWidth(lineWidth);
+        shape.setColor(color);
+    }
 }
