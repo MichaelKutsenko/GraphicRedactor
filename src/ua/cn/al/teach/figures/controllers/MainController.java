@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -69,8 +68,6 @@ public class MainController {
     @FXML
     private Pane pnOnTop;
     @FXML
-    private MenuButton btnStroke;
-    @FXML
     private Label lblWidth;
     @FXML
     private ColorPicker cp;
@@ -126,13 +123,14 @@ public class MainController {
         }
 
         if (pane == pnOnTop && selectedShapes.getShapes().size() > 0){
-
             for (Shape s : selectedShapes.getShapes()){
                 sheet.remove(s);
                 sheet.add(s);
             }
-            repaint(event);
+//            repaint(event);
         }
+
+        repaint(event);
     }
 
     private void specifyShapeType(Pane pane) {
@@ -257,6 +255,7 @@ public class MainController {
                 repaint(event);
             }
             points = null;
+            shape = null;
             return;
         }
 

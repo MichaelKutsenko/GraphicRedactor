@@ -23,5 +23,5 @@ public interface GraphicsEngine {
     public void setDashLength(double dashLength);
 
     public void paintPolygon(double x, double y, List<Point> points);
-    public void paintOval(double topLeftX, double topLeftY, double width, double height);
+    public void paintOval(double x, double y, double radiusX, double radiusY);
 }

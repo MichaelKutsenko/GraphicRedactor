@@ -20,7 +20,10 @@ public class Ellipse extends Shape {
     @Override
     protected void draw(GraphicsEngine ge) {
         ge.strokeOval(x + center.getX(), y + center.getY(), radiusX, radiusY);
-        ge.paintOval(x + center.getX() - radiusX, y + center.getY() - radiusY, radiusX*2, radiusY*2);
+
+        if (isPainted()) {
+            ge.paintOval(x + center.getX(), y + center.getY(), radiusX , radiusY);
+        }
     }
 
     @Override

@@ -19,7 +19,7 @@ public abstract class Shape extends Point {
     protected boolean isPainted;
 
     protected RGBColor color = new RGBColor(0, 0, 0, 1);
-    protected RGBColor fill = new RGBColor(0, 1.0, 0, 1);
+    protected RGBColor fill = new RGBColor(1.0, 1.0, 1.0, 1);
     protected double lineWidth = 1;
     protected double dashLength = 0;
 

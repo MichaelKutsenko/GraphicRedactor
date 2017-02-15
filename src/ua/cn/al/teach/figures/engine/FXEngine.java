@@ -61,8 +61,8 @@ public class FXEngine implements GraphicsEngine {
     }
 
     @Override
-    public void paintOval (double topLeftX, double topLeftY, double width, double height) {
-        gc.fillOval(topLeftX, topLeftY, width, height);
+    public void paintOval (double x, double y, double radiusX, double radiusY) {
+        gc.fillOval(x - radiusX, y - radiusY, radiusX*2, radiusY*2);
     }
 
     @Override

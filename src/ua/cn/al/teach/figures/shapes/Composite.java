@@ -195,6 +195,7 @@ public class Composite extends Shape {
         }
     }
 
+    @Override
     public void setColor(RGBColor color){
         for (Shape s : shapes){
             s.setColor(color);
@@ -205,6 +206,20 @@ public class Composite extends Shape {
     public void setLineWidth(double lineWidth) {
         for (Shape s : shapes){
             s.setLineWidth(lineWidth);
+        }
+    }
+
+    @Override
+    public void setFill(RGBColor color) {
+        for (Shape s : shapes){
+            s.setFill(color);
+        }
+    }
+
+    @Override
+    public void setPainted(boolean isPainted) {
+        for (Shape s : shapes){
+            s.setPainted(isPainted);
         }
     }
 }

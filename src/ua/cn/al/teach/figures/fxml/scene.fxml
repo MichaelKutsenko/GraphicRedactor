@@ -170,7 +170,7 @@
                                           <Pane layoutY="200.0" prefHeight="100.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="210.0">
                                              <children>
                                                 <Label layoutX="34.0" layoutY="78.0" text="Width" />
-                                                <MenuButton fx:id="btnStroke" mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0">
+                                                <MenuButton mnemonicParsing="false" prefHeight="36.0" prefWidth="100.0">
                                                   <items>
                                                     <MenuItem fx:id="itmStroke1" mnemonicParsing="false" onAction="#changeStrokeWidth" text="1.0">
                                                          <graphic>
@@ -223,11 +223,6 @@
                            </children>
                         </AnchorPane>
                      </content>
-                </TitledPane>
-                <TitledPane animated="false" text="untitled 3">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
                 </TitledPane>
               </panes>
             </Accordion>
