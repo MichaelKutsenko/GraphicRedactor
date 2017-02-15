@@ -6,6 +6,5 @@ public class Polygon extends PolyLine {
 
     public Polygon(List<Point> points) {
         this.points.addAll(points);
-//        this.points.add(points.get(0));
     }
 }
