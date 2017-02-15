@@ -116,7 +116,6 @@ public class Composite extends Shape {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -131,6 +130,27 @@ public class Composite extends Shape {
         for(Shape s: shapes){
             if (s.isFocused) {
                 s.moveTo(from, dest);
+            }
+        }
+    }
+
+    @Override
+    protected boolean containInternalPoint(Point point) {
+        for (Shape s : shapes){
+            if (s.containInternalPoint(point)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void paint(Point point, RGBColor color){
+        for (int i = shapes.size() - 1; i >= 0; i--){
+            if (shapes.get(i).containInternalPoint(point)){
+                shapes.get(i).setFill(color);
+                shapes.get(i).setPainted(true);
+                return;
             }
         }
     }

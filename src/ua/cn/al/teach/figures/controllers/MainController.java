@@ -1,6 +1,5 @@
 package ua.cn.al.teach.figures.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -15,14 +14,13 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.*;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.QuadCurveTo;
 import ua.cn.al.teach.figures.engine.FXEngine;
 import ua.cn.al.teach.figures.engine.Graphics;
 import ua.cn.al.teach.figures.enums.ShapeType;
 import ua.cn.al.teach.figures.shapes.*;
-import ua.cn.al.teach.figures.shapes.Circle;
-import ua.cn.al.teach.figures.shapes.Rectangle;
-import ua.cn.al.teach.figures.shapes.Shape;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -239,7 +237,8 @@ public class MainController {
 
     @FXML
     void finishDraw(MouseEvent event) {
-        if (selectedPane == null || selectedPane == pnMove || (points.size()==1 && selectedPane!=pnSelect)){
+        if (selectedPane == null || selectedPane == pnMove ||
+                (points.size()==1 && selectedPane!=pnSelect && selectedPane!=pnPaint)){
             points = null;
             return;
         }
@@ -264,6 +263,10 @@ public class MainController {
         if ((type == ShapeType.Polygon  && !(isaCompletePolygon(event))) ||
                 (type == ShapeType.Curve && points.size() < 3)){
             return;
+        }
+
+        if (selectedPane == pnPaint){
+            sheet.paint(new Point(event.getX(), event.getY()), color);
         }
 
         if (shape != null){

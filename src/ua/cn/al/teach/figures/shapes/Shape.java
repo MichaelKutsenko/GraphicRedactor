@@ -16,6 +16,7 @@ import java.util.List;
 public abstract class Shape extends Point {
     protected List<Point> points = new ArrayList<>();
     protected boolean isFocused;
+    protected boolean isPainted;
 
     protected RGBColor color = new RGBColor(0, 0, 0, 1);
     protected RGBColor fill = new RGBColor(0, 1.0, 0, 1);
@@ -25,6 +26,7 @@ public abstract class Shape extends Point {
     protected abstract void draw(GraphicsEngine ge);
     protected abstract boolean containedInField(Rectangle focusRect);
     protected abstract boolean containPoint(Point point);
+    protected abstract boolean containInternalPoint(Point point);
 
     public void show(GraphicsEngine ge) {
         if (!isFocused){
@@ -60,6 +62,14 @@ public abstract class Shape extends Point {
 
     public boolean isFocused() {
         return isFocused;
+    }
+
+    public boolean isPainted() {
+        return isPainted;
+    }
+
+    public void setPainted(boolean painted) {
+        isPainted = painted;
     }
 
     public RGBColor getColor() {

@@ -20,6 +20,7 @@ public class Ellipse extends Shape {
     @Override
     protected void draw(GraphicsEngine ge) {
         ge.strokeOval(x + center.getX(), y + center.getY(), radiusX, radiusY);
+        ge.paintOval(x + center.getX() - radiusX, y + center.getY() - radiusY, radiusX*2, radiusY*2);
     }
 
     @Override
@@ -28,10 +29,8 @@ public class Ellipse extends Shape {
                 center.getX()+radiusX+x <= focusRect.getTopRightPoint().getX() &&
                 center.getY()-radiusY+y >= focusRect.getBottomLeftPoint().getY() &&
                 center.getY()+radiusY+y <= focusRect.getTopRightPoint().getY()){
-//            this.setFocused(true);
             return true;
         } else {
-//            this.setFocused(false);
             return false;
         }
     }
@@ -41,19 +40,38 @@ public class Ellipse extends Shape {
         double x0 = center.getX() + x;
         double y0 = center.getY() + y;
 
-        double angle =(Math.PI-Math.atan2(point.getY() - y0, -(point.getX() - x0)));
-
-        double r = (radiusX*radiusY) /
-                Math.sqrt(radiusY*radiusY*Math.cos(angle)*Math.cos(angle) + radiusX*radiusX*Math.sin(angle)*Math.sin(angle));
-
-        double length = Math.sqrt((point.getX()-x0)*(point.getX()-x0) + (point.getY()-y0)*(point.getY()-y0));
+        double r = getR(point, x0, y0);
+        double length = getLength(point, x0, y0);
 
         if (r >= length - 7 && r <= length + 7) {
-//            isFocused = true;
             return true;
         }
-//        isFocused = false;
         return false;
+    }
+
+    @Override
+    protected boolean containInternalPoint(Point point) {
+        double x0 = center.getX() + x;
+        double y0 = center.getY() + y;
+
+        double r = getR(point, x0, y0);
+        double length = getLength(point, x0, y0);
+
+        if (r >= length) {
+            return true;
+        }
+        return false;
+    }
+
+    private double getR(Point point, double x0, double y0) {
+        double angle =(Math.PI-Math.atan2(point.getY() - y0, -(point.getX() - x0)));
+
+        return (radiusX*radiusY) /
+                Math.sqrt(radiusY*radiusY*Math.cos(angle)*Math.cos(angle) + radiusX*radiusX*Math.sin(angle)*Math.sin(angle));
+    }
+
+    private double getLength(Point point, double x0, double y0) {
+        return Math.sqrt((point.getX()-x0)*(point.getX()-x0) + (point.getY()-y0)*(point.getY()-y0));
     }
 
     public Point getCenter() {

@@ -7,7 +7,10 @@ package ua.cn.al.teach.figures.engine;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import ua.cn.al.teach.figures.shapes.Point;
 import ua.cn.al.teach.figures.shapes.RGBColor;
+
+import java.util.List;
 
 /**
  *
@@ -44,9 +47,23 @@ public class FXEngine implements GraphicsEngine {
         gc.strokeArc(x-radiusX, y-radiusY, radiusX*2, radiusY*2, 0, 360, ArcType.OPEN);
     }
 
-//    public void strokeCurve(double x1, double y1, double x2, double y2) {
-//        gc.strokeArc(x2, y2, y2, y2, y2, x2, ArcType.CHORD);
-//    }
+    @Override
+    public void paintPolygon(double x, double y, List<Point> points) {
+        double[] xi = new double[points.size() - 1];
+        double[] yi = new double[points.size() - 1];
+
+        for (int i = 0; i < points.size() - 1; i++) {
+            xi[i] = points.get(i).getX() + x;
+            yi[i] = points.get(i).getY() + y;
+        }
+
+        gc.fillPolygon(xi, yi, points.size() - 1);
+    }
+
+    @Override
+    public void paintOval (double topLeftX, double topLeftY, double width, double height) {
+        gc.fillOval(topLeftX, topLeftY, width, height);
+    }
 
     @Override
     public void setColor(RGBColor rgb) {

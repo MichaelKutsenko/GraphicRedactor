@@ -4,7 +4,10 @@
  */
 package ua.cn.al.teach.figures.engine;
 
+import ua.cn.al.teach.figures.shapes.Point;
 import ua.cn.al.teach.figures.shapes.RGBColor;
+
+import java.util.List;
 
 /**
  *
@@ -18,4 +21,7 @@ public interface GraphicsEngine {
     public void setFillColor(RGBColor c);
     public void setLineWidth(double w);
     public void setDashLength(double dashLength);
+
+    public void paintPolygon(double x, double y, List<Point> points);
+    public void paintOval(double topLeftX, double topLeftY, double width, double height);
 }

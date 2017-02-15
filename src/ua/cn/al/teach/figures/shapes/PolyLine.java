@@ -31,7 +31,11 @@ public class PolyLine extends Shape {
                     Point p2 = pi.next();
                     ge.strokeLine(x + p.getX(), y + p.getY(), x + p2.getX(), y + p2.getY());
                     p = p2;
-                }       
+                }
+
+                if (isPainted()){
+                    ge.paintPolygon(getX(), getY(), points);
+                }
     }
 
     @Override
@@ -43,12 +47,9 @@ public class PolyLine extends Shape {
 
             if (x1 < focusRect.getBottomLeftPoint().getX() || x1 > focusRect.getTopRightPoint().getX() ||
                     y1 < focusRect.getBottomLeftPoint().getY() || y1 > focusRect.getTopRightPoint().getY()){
-//                this.setFocused(false);
-//                return;
                 return false;
             }
         }
-//        this.setFocused(true);
         return true;
     }
 
@@ -63,10 +64,8 @@ public class PolyLine extends Shape {
 
         if (checkIntersection(new Line(new Point(x1, y1), new Point(x2, y2))) ||
                 checkIntersection(new Line(new Point(x2, y1), new Point(x1, y2)))){
-//            isFocused = true;
             return true;
         }
-//        else isFocused = false;
         return false;
     }
 
@@ -93,5 +92,26 @@ public class PolyLine extends Shape {
         }
 
         return false;
+    }
+
+    @Override
+    protected boolean containInternalPoint(Point point) {
+        if (points.get(0) != points.get(points.size()-1)){
+            return false;
+        }
+
+        Double[] p = new Double[(points.size() - 1)*2];
+
+        for (int i = 0, j = 0; i < getPoints().size() - 1; i++, j=j+2) {
+            p[j] = getPoints().get(i).getX() + getX();
+            p[j+1] = getPoints().get(i).getY() + getY();
+        }
+
+        javafx.scene.shape.Polygon polygon = new javafx.scene.shape.Polygon();
+        polygon.getPoints().addAll(p);
+
+        boolean isContain = polygon.contains(point.getX(), point.getY());
+
+        return isContain;
     }
 }
