@@ -162,7 +162,9 @@ public class ShapeFactory {
 
                 return ellipse;
             }
-            else return null;
+            else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return null;

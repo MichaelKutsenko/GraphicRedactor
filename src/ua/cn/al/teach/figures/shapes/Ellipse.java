@@ -18,7 +18,7 @@ public class Ellipse extends Shape {
     }
 
     @Override
-    protected void draw(GraphicsEngine ge) {
+    public void draw(GraphicsEngine ge) {
         ge.strokeOval(x + center.getX(), y + center.getY(), radiusX, radiusY);
 
         if (isPainted()) {
@@ -27,7 +27,7 @@ public class Ellipse extends Shape {
     }
 
     @Override
-    protected boolean containedInField(Rectangle focusRect) {
+    public boolean containedInField(Rectangle focusRect) {
         if (center.getX()-radiusX+x  >= focusRect.getBottomLeftPoint().getX() &&
                 center.getX()+radiusX+x <= focusRect.getTopRightPoint().getX() &&
                 center.getY()-radiusY+y >= focusRect.getBottomLeftPoint().getY() &&
@@ -39,7 +39,7 @@ public class Ellipse extends Shape {
     }
 
     @Override
-    protected boolean containPoint(Point point) {
+    public boolean containPoint(Point point) {
         double x0 = center.getX() + x;
         double y0 = center.getY() + y;
 
@@ -53,7 +53,7 @@ public class Ellipse extends Shape {
     }
 
     @Override
-    protected boolean containInternalPoint(Point point) {
+    public boolean containInternalPoint(Point point) {
         double x0 = center.getX() + x;
         double y0 = center.getY() + y;
 

@@ -1,7 +1,3 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.engine;
 
 import javafx.scene.canvas.GraphicsContext;
@@ -12,10 +8,6 @@ import ua.cn.al.teach.figures.shapes.RGBColor;
 
 import java.util.List;
 
-/**
- *
- * @author al
- */
 public class FXEngine implements GraphicsEngine {
 
     GraphicsContext gc;

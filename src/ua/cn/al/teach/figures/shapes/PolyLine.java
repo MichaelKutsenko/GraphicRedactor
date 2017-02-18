@@ -1,7 +1,3 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.shapes;
 
 import ua.cn.al.teach.figures.engine.GraphicsEngine;
@@ -9,10 +5,6 @@ import ua.cn.al.teach.figures.engine.GraphicsEngine;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- *
- * @author al
- */
 public class PolyLine extends Shape {
 
     public void addPoint(Point p) {
@@ -24,7 +16,7 @@ public class PolyLine extends Shape {
     }
 
     @Override
-    protected void draw(GraphicsEngine ge) {
+    public void draw(GraphicsEngine ge) {
                 Iterator<Point> pi =points.iterator();
                 Point p = pi.next();
                 while (pi.hasNext()) {
@@ -39,7 +31,7 @@ public class PolyLine extends Shape {
     }
 
     @Override
-    protected boolean containedInField(Rectangle focusRect) {
+    public boolean containedInField(Rectangle focusRect) {
         double x1, y1;
         for (int i = 0; i < points.size(); i++){
             x1 = points.get(i).getX() + x;
@@ -54,7 +46,7 @@ public class PolyLine extends Shape {
     }
 
     @Override
-    protected boolean containPoint(Point point) {
+    public boolean containPoint(Point point) {
         final int POINT_AREA = 4;
 
         double x1 = point.getX() - POINT_AREA;
@@ -95,7 +87,7 @@ public class PolyLine extends Shape {
     }
 
     @Override
-    protected boolean containInternalPoint(Point point) {
+    public boolean containInternalPoint(Point point) {
         if (points.get(0) != points.get(points.size()-1)){
             return false;
         }

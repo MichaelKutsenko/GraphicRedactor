@@ -1,7 +1,3 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.engine;
 
 import javafx.concurrent.Service;
@@ -10,10 +6,6 @@ import ua.cn.al.teach.figures.shapes.Shape;
 
 import java.util.HashMap;
 
-/**
- *
- * @author al
- */
 public class Graphics extends Service {
     private volatile static Graphics instance = null;
     private HashMap<String, GraphicsEngine> configuredEngines = new HashMap<>();
@@ -38,6 +30,8 @@ public class Graphics extends Service {
         return new Task() {
             @Override
             protected Object call() {
+
+                currentGE.clear();
                 show(shape);
                 return null;
             }

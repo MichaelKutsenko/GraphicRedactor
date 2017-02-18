@@ -1,13 +1,11 @@
 package ua.cn.al.teach.figures.controllers;
 
-import javafx.event.Event;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -25,21 +23,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainController {
-    private  double lineWidth = 1;
-    private RGBColor color = new RGBColor(0, 0, 0, 1);
-
-    private boolean isCtrlDownPressed;
     private Sheet sheet;
-    private Composite selectedShapes;
     private Shape shape;
     private List<Point> points;
     private ShapeType type;
-    private ShapeFactory factory;
-
-    private ControlPanes panes;
-    private Pane selectedPane;
+    private RGBColor color;
+    private double lineWidth;
+    private Composite selectedShapes;
 
     private Graphics graph;
+    private ShapeFactory factory;
+
+    private Pane selectedPane;
+    private ControlPanes panes;
+    private boolean isCtrlDownPressed;
 
     @FXML
     private Canvas cnvs;
@@ -74,6 +71,8 @@ public class MainController {
     @FXML
     private javafx.scene.shape.Rectangle rctlColor;
     @FXML
+    private Pane pnStroke;
+    @FXML
     private Pane pnPaint;
     @FXML
     private javafx.scene.shape.Rectangle rctlSelect;
@@ -81,28 +80,26 @@ public class MainController {
     private Label lblY;
     @FXML
     private Label lblX;
-    @FXML
-    private ImageView imgBrush;
 
     @FXML
     public void initialize() {
         sheet = new Sheet();
-        selectedShapes = new Composite();
+        color = new RGBColor(0, 0, 0, 1);
+        lineWidth = 1;
         factory = ShapeFactory.getInstance();
+        selectedShapes = new Composite();
 
         graph = Graphics.getInstance();
         graph.addEngine(new FXEngine(cnvs.getGraphicsContext2D()), "FXEngine");
         graph.start();
 
         createControlPanes();
-        imgBrush.setImage(new Image(getClass().getResourceAsStream("../img/brush.png")));
-        cp.setValue(Color.BLACK);
         drawPaneImg();
-
+        cp.setValue(Color.BLACK);
     }
 
     @FXML
-    void chooseShape(MouseEvent event) {
+    void chooseDrawTask(MouseEvent event) {
         if (type != null && points != null) {
             sheet.add(shape);
             points = null;
@@ -118,16 +115,21 @@ public class MainController {
                 joinFigures();
             }
             else if (selectedShapes.getShapes().size() == 1 && selectedShapes.getShapes().get(0) instanceof Composite){
-                divorceFugures();
+                divorceFigures();
             }
         }
-
-        if (pane == pnOnTop && selectedShapes.getShapes().size() > 0){
+        else if (pane == pnOnTop && selectedShapes.getShapes().size() > 0){
             for (Shape s : selectedShapes.getShapes()){
                 sheet.remove(s);
                 sheet.add(s);
             }
-//            repaint(event);
+        }
+        else if (pane == pnStroke && isCtrlDownPressed == true && selectedShapes.getShapes().size() > 0){
+            selectedShapes.setColor(color);
+        }
+        else if (pane == pnPaint && isCtrlDownPressed == true && selectedShapes.getShapes().size() > 0){
+            selectedShapes.setFill(color);
+            selectedShapes.setPainted(true);
         }
 
         repaint(event);
@@ -143,14 +145,14 @@ public class MainController {
         else if (pane == pnPolygon) type = ShapeType.Polygon;
         else if (pane == pnCurve) type = ShapeType.Curve;
         else if (pane == pnSelect) type = ShapeType.RectMarker;
-        else type = null;
+        else {
+            type = null;
+            shape = null;
+        }
 
         if (type != null){
             sheet.deselect();
             selectedShapes.clear();
-
-            paint(sheet);
-//            graph.showAsync(sheet);
         }
     }
 
@@ -168,10 +170,9 @@ public class MainController {
         composite.setFocused(true);
 
         paint(sheet);
-//        graph.showAsync(sheet);
     }
 
-    private void divorceFugures() {
+    private void divorceFigures() {
         int num = sheet.getShapes().indexOf(selectedShapes.getShapes().get(0));
 
         List<Shape> head = (List<Shape>) sheet.sublist(0, num);
@@ -179,16 +180,17 @@ public class MainController {
 
         List<Shape> shapeList = new ArrayList<>();
         shapeList.addAll(head);
-        for (Shape s : ((Composite) selectedShapes.getShapes().get(0)).getShapes()){
+        for (Shape s : ((Composite) selectedShapes.getShapes().get(0)).getShapes()) {
             shapeList.add(s);
+            selectedShapes.add(s);
         }
-        if (tail.size() > 0){
+        if (tail.size() > 0) {
             shapeList.addAll(tail);
         }
 
         sheet.setShapes(shapeList);
 
-        selectedShapes.clear();
+        selectedShapes.getShapes().remove(0);
     }
 
     @FXML
@@ -210,7 +212,7 @@ public class MainController {
     }
 
     @FXML
-    public void drawShape(MouseEvent event) {
+    public void draw(MouseEvent event) {
         showCoordinates(event);
 
         if (selectedPane == null) {
@@ -235,42 +237,34 @@ public class MainController {
 
     @FXML
     void finishDraw(MouseEvent event) {
-        if (selectedPane == null || selectedPane == pnMove ||
-                (points.size()==1 && selectedPane!=pnSelect && selectedPane!=pnPaint)){
+        if (selectedPane == null || (points.size()==1 && selectedPane!=pnSelect && selectedPane!=pnPaint && selectedPane!=pnStroke)){
             points = null;
+            return;
+        }
+
+        if ((type == ShapeType.Polygon  && !(isaCompletePolygon(event))) || (type == ShapeType.Curve && points.size() < 3)){
             return;
         }
 
         if (selectedPane == pnSelect) {
             if (points.size() == 1) {
-
                 if ( event.getButton() == MouseButton.PRIMARY ){
                     sheet.attachSelectedFigure(new Point(event.getX(), event.getY()), isCtrlDownPressed, selectedShapes);
                 }
                 else {
                     sheet.separateFigure(new Point(event.getX(), event.getY()), isCtrlDownPressed, selectedShapes);
                 }
-
-                shape = null;
-                repaint(event);
             }
-            points = null;
             shape = null;
-            return;
         }
-
-        if ((type == ShapeType.Polygon  && !(isaCompletePolygon(event))) ||
-                (type == ShapeType.Curve && points.size() < 3)){
-            return;
-        }
-
-        if (selectedPane == pnPaint){
+        else if (selectedPane == pnPaint){
             sheet.paint(new Point(event.getX(), event.getY()), color);
         }
-
-        if (shape != null){
-            sheet.add(shape);
+        else if (selectedPane == pnStroke){
+            sheet.redrawFigure(new Point(event.getX(), event.getY()), color);
         }
+
+        sheet.add(shape);
         points = null;
 
         repaint(event);
@@ -293,11 +287,9 @@ public class MainController {
         c.add(shape);
 
         paint(c);
-//        graph.showAsync(c);
     }
 
     private void paint(Shape shape) {
-        graph.clear();
         graph.setShape(shape);
         graph.restart();
     }
@@ -307,7 +299,36 @@ public class MainController {
     }
 
     @FXML
-    void collectFigures(KeyEvent event) {
+    void changeColor(ActionEvent event) {
+        color = new RGBColor(cp.getValue().getRed(), cp.getValue().getGreen(), cp.getValue().getBlue(), cp.getValue().getOpacity());
+
+        rctlColor.setFill(cp.getValue());
+    }
+
+    @FXML
+    void changeSelectedStrokeColor(MouseEvent event){
+        selectedShapes.setColor(color);
+
+        paint(sheet);
+    }
+
+    @FXML
+    void changeStrokeWidth(ActionEvent event) {
+        String width = ((MenuItem)event.getSource()).getText();
+
+        lblWidth.setText(width);
+        lineWidth = Double.parseDouble(width);
+    }
+
+    @FXML
+    void changeSelectedStrokeWidth(MouseEvent event){
+        selectedShapes.setLineWidth(lineWidth);
+
+        paint(sheet);
+    }
+
+    @FXML
+    void pressCtrlDown(KeyEvent event) {
         if (!event.isControlDown()) {
             return;
         }
@@ -315,7 +336,7 @@ public class MainController {
     }
 
     @FXML
-    void onKeyReleased(KeyEvent event) {
+    void releaseKey(KeyEvent event) {
         if ("Delete".equals(event.getCode().getName())) {
             if (selectedShapes.getShapes().size() > 0){
                 for (Shape s : selectedShapes.getShapes()){
@@ -324,7 +345,6 @@ public class MainController {
                 selectedShapes.clear();
 
                 paint(sheet);
-//                graph.showAsync(sheet);
             }
         }
 
@@ -335,7 +355,7 @@ public class MainController {
 
 
     @FXML
-    public void showCoordinates(MouseEvent event) {
+    private void showCoordinates(MouseEvent event) {
         lblX.setText("X: " + event.getX());
         lblY.setText("Y: " + event.getY());
     }
@@ -344,37 +364,6 @@ public class MainController {
     public void deleteCoordinates(MouseEvent event) {
         lblX.setText("X: ");
         lblY.setText("Y: ");
-    }
-
-    @FXML
-    void changeColor(Event event) {
-        color = new RGBColor(cp.getValue().getRed(), cp.getValue().getGreen(), cp.getValue().getBlue(), cp.getValue().getOpacity());
-
-        rctlColor.setFill(cp.getValue());
-        for (Shape s : selectedShapes.getShapes()){
-            s.setColor(color);
-        }
-
-        paint(sheet);
-    }
-
-    @FXML
-    void changeStrokeWidth(Event event) {
-        String width;
-
-        if (event.getSource() instanceof MenuItem){
-            width = ((MenuItem)event.getSource()).getText();
-            lblWidth.setText(width);
-        }
-        else width = ((Label)event.getSource()).getText();
-
-        lineWidth = Double.parseDouble(width);
-
-        for (Shape s : selectedShapes.getShapes()){
-            s.setLineWidth(lineWidth);
-        }
-
-        paint(sheet);
     }
 
     private void createControlPanes() {
@@ -392,6 +381,7 @@ public class MainController {
         panes.addPane(pnJoin);
         panes.addPane(pnOnTop);
         panes.addPane(pnPaint);
+        panes.addPane(pnStroke);
     }
 
     private void drawPaneImg() {

@@ -1,7 +1,3 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.shapes;
 
 import ua.cn.al.teach.figures.engine.GraphicsEngine;
@@ -9,10 +5,6 @@ import ua.cn.al.teach.figures.engine.GraphicsEngine;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author al
- */
 public abstract class Shape extends Point {
     protected List<Point> points = new ArrayList<>();
     protected boolean isFocused;
@@ -23,10 +15,10 @@ public abstract class Shape extends Point {
     protected double lineWidth = 1;
     protected double dashLength = 0;
 
-    protected abstract void draw(GraphicsEngine ge);
-    protected abstract boolean containedInField(Rectangle focusRect);
-    protected abstract boolean containPoint(Point point);
-    protected abstract boolean containInternalPoint(Point point);
+    public abstract void draw(GraphicsEngine ge);
+    public abstract boolean containedInField(Rectangle focusRect);
+    public abstract boolean containPoint(Point point);
+    public abstract boolean containInternalPoint(Point point);
 
     public void show(GraphicsEngine ge) {
         if (!isFocused){
@@ -41,7 +33,7 @@ public abstract class Shape extends Point {
     }
 
     public void setColor(RGBColor c) {
-        color = c;
+        this.color = c;
     }
 
     public void setFill(RGBColor c) {

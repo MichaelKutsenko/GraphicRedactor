@@ -1,18 +1,14 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.shapes;
 
-/**
- *
- * @author al
- */
 public class RGBColor {
     private final double R;
     private final double G;
     private final double B;
     private final double opacity;
+
+    public RGBColor() {
+        this(0, 0, 0, 1);
+    }
 
     public RGBColor(double R, double G, double B, double opacity) {
         this.R = R;

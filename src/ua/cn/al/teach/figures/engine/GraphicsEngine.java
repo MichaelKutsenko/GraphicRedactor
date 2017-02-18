@@ -1,7 +1,3 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.engine;
 
 import ua.cn.al.teach.figures.shapes.Point;
@@ -9,10 +5,6 @@ import ua.cn.al.teach.figures.shapes.RGBColor;
 
 import java.util.List;
 
-/**
- *
- * @author al
- */
 public interface GraphicsEngine {
     public void clear();
     public void strokeLine(double x1, double y1, double x2, double y2);

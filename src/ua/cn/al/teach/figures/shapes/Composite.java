@@ -1,18 +1,9 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.shapes;
-
 import ua.cn.al.teach.figures.engine.GraphicsEngine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author al
- */
 public class Composite extends Shape {
     private List<Shape> shapes;
 
@@ -29,6 +20,7 @@ public class Composite extends Shape {
 
     public void selectFigures(Rectangle focusRect, boolean groupFigures, Composite composite) {
         if (!groupFigures) {
+            composite.setFocused(false);
             composite.clear();
         }
 
@@ -40,9 +32,6 @@ public class Composite extends Shape {
             if (s.containedInField(focusRect)) {
                 s.setFocused(true);
                 composite.add(s);
-            } else {
-                s.setFocused(false);
-                composite.remove(s);
             }
         }
     }
@@ -59,28 +48,30 @@ public class Composite extends Shape {
 
     public void attachSelectedFigure(Point point, boolean groupFigures, Composite composite) {
         if (!groupFigures) {
+            composite.setFocused(false);
             composite.clear();
         }
 
         for (int i = shapes.size() - 1; i >= 0; i--) {
+            if (shapes.get(i).isPainted()) {
+                if (!shapes.get(i).containInternalPoint(point)){
+                    continue;
+                }
+                else if (!composite.contains(shapes.get(i))){
+                    shapes.get(i).setFocused(true);
+                    composite.add(shapes.get(i));
+                }
+
+                return;
+            }
+
             if (groupFigures && shapes.get(i).isFocused()) continue;
 
             if (shapes.get(i).containPoint(point)) {
                 shapes.get(i).setFocused(true);
                 composite.add(shapes.get(i));
 
-                if (groupFigures) {
-                    return;
-                } else {
-                    for (int j = 0; j < i; j++) {
-                        shapes.get(j).setFocused(false);
-                        composite.remove(shapes.get(j));
-                    }
-                    return;
-                }
-            } else {
-                shapes.get(i).setFocused(false);
-                composite.remove(shapes.get(i));
+                return;
             }
         }
     }
@@ -135,13 +126,12 @@ public class Composite extends Shape {
     }
 
     @Override
-    protected boolean containInternalPoint(Point point) {
+    public boolean containInternalPoint(Point point) {
         for (Shape s : shapes){
             if (s.containInternalPoint(point)) {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -155,7 +145,24 @@ public class Composite extends Shape {
         }
     }
 
+    public void redrawFigure(Point point, RGBColor color){
+        for (int i = shapes.size() - 1; i >= 0; i--){
+            if (shapes.get(i).containPoint(point)){
+                shapes.get(i).setColor(color);
+                return;
+            }
+
+            if (shapes.get(i).containInternalPoint(point) && shapes.get(i).isPainted()){
+                return;
+            }
+        }
+    }
+
     public void add(Shape s){
+        if (s == null){
+            return;
+        }
+
         shapes.add(s);
     }
 
@@ -218,6 +225,8 @@ public class Composite extends Shape {
 
     @Override
     public void setPainted(boolean isPainted) {
+        this.isPainted = true;
+
         for (Shape s : shapes){
             s.setPainted(isPainted);
         }

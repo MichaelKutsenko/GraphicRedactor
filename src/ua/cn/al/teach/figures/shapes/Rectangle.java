@@ -1,13 +1,5 @@
-/*
- * 
- * 
- */
 package ua.cn.al.teach.figures.shapes;
 
-/**
- *
- * @author al
- */
 public class Rectangle extends PolyLine {
     private static final int BOTTOM_LEFT_POINT = 0;
     private static final int TOP_RIGHT_POINT = 2;
