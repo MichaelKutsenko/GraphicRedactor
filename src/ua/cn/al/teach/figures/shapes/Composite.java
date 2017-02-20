@@ -231,4 +231,26 @@ public class Composite extends Shape {
             s.setPainted(isPainted);
         }
     }
+
+    @Override
+    public boolean isPainted() {
+        for (Shape s : shapes){
+            if (s.isPainted) return true;
+        }
+        return false;
+    }
+
+
+
+    @Override
+    public Composite clone() throws CloneNotSupportedException {
+        Composite clone = (Composite) super.clone();
+
+        clone.shapes = new ArrayList<>();
+        for (Shape s : shapes){
+            clone.shapes.add(s.clone());
+        }
+
+        return clone;
+    }
 }

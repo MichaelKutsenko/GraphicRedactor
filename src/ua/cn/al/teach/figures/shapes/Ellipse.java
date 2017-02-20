@@ -21,7 +21,7 @@ public class Ellipse extends Shape {
     public void draw(GraphicsEngine ge) {
         ge.strokeOval(x + center.getX(), y + center.getY(), radiusX, radiusY);
 
-        if (isPainted()) {
+        if (this.isPainted()) {
             ge.paintOval(x + center.getX(), y + center.getY(), radiusX , radiusY);
         }
     }
@@ -99,5 +99,13 @@ public class Ellipse extends Shape {
 
     public void setRadiusY(double radiusY) {
         this.radiusY = radiusY;
+    }
+
+    @Override
+    public Ellipse clone() throws CloneNotSupportedException {
+        Ellipse clone = (Ellipse) super.clone();
+        clone.center = center.clone();
+
+        return clone;
     }
 }

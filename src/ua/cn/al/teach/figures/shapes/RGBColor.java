@@ -1,10 +1,16 @@
 package ua.cn.al.teach.figures.shapes;
 
-public class RGBColor {
-    private final double R;
-    private final double G;
-    private final double B;
-    private final double opacity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class RGBColor implements Cloneable{
+    @JsonProperty("red")
+    private double R;
+    @JsonProperty("green")
+    private double G;
+    @JsonProperty("black")
+    private double B;
+    @JsonProperty("opacity")
+    private double opacity;
 
     public RGBColor() {
         this(0, 0, 0, 1);
@@ -31,5 +37,26 @@ public class RGBColor {
 
     public double getOpacity() {
         return opacity;
+    }
+
+    public void setR(double r) {
+        R = r;
+    }
+
+    public void setG(double g) {
+        G = g;
+    }
+
+    public void setB(double b) {
+        B = b;
+    }
+
+    public void setOpacity(double opacity) {
+        this.opacity = opacity;
+    }
+
+    @Override
+    protected RGBColor clone() throws CloneNotSupportedException {
+        return (RGBColor) super.clone();
     }
 }

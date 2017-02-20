@@ -38,4 +38,12 @@ public class Curve extends PolyLine {
     public void setC(double c) {
         this.c = c;
     }
+
+    @Override
+    public Curve clone() throws CloneNotSupportedException {
+        Curve clone = (Curve) super.clone();
+        clone.apex = apex.clone();
+
+        return clone;
+    }
 }

@@ -1,6 +1,6 @@
 package ua.cn.al.teach.figures.shapes;
 
-public class Point {
+public class Point implements Cloneable {
     protected double x;
     protected double y;
 
@@ -36,10 +36,7 @@ public class Point {
 
 
     @Override
-    public String toString() {
-        return "Point{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+    public Point clone() throws CloneNotSupportedException {
+        return (Point) super.clone();
     }
 }

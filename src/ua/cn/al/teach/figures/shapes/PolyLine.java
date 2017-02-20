@@ -88,7 +88,8 @@ public class PolyLine extends Shape {
 
     @Override
     public boolean containInternalPoint(Point point) {
-        if (points.get(0) != points.get(points.size()-1)){
+        if (points.get(0).getX() != points.get(points.size()-1).getX() &&
+                points.get(0).getY() != points.get(points.size()-1).getY()){
             return false;
         }
 
@@ -105,5 +106,10 @@ public class PolyLine extends Shape {
         boolean isContain = polygon.contains(point.getX(), point.getY());
 
         return isContain;
+    }
+
+    @Override
+    public PolyLine clone() throws CloneNotSupportedException {
+        return (PolyLine) super.clone();
     }
 }

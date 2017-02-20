@@ -25,24 +25,21 @@
 
 <AnchorPane onKeyPressed="#pressCtrlDown" onKeyReleased="#releaseKey" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.cn.al.teach.figures.controllers.MainController">
    <children>
-      <Canvas fx:id="cnvs" height="575.0" onMouseDragged="#draw" onMouseExited="#deleteCoordinates" onMousePressed="#startDraw" onMouseReleased="#finishDraw" width="600.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="25.0" />
       <AnchorPane layoutX="-3.0" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <MenuBar maxHeight="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Close" />
+                    <MenuItem mnemonicParsing="false" onAction="#save" text="Save" />
+                        <MenuItem mnemonicParsing="false" onAction="#load" text="Load" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Delete" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="About" />
+                    <MenuItem mnemonicParsing="false" onAction="#deleteFigures" text="✘ Delete" />
+                        <MenuItem mnemonicParsing="false" onAction="#undo" text="↶ Undo" />
+                        <MenuItem mnemonicParsing="false" onAction="#redo" text="↷ Redo" />
                   </items>
                 </Menu>
               </menus>
@@ -256,5 +253,14 @@
             </Label>
          </children>
       </AnchorPane>
+      <ScrollPane fitToWidth="true" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="25.0">
+         <content>
+            <AnchorPane>
+               <children>
+                  <Canvas fx:id="cnvs" height="1240.0" onMouseDragged="#draw" onMouseExited="#deleteCoordinates" onMouseMoved="#showCoordinates" onMousePressed="#startDraw" onMouseReleased="#finishDraw" width="1754.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

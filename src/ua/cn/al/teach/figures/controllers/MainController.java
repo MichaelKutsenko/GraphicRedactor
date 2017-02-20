@@ -1,5 +1,8 @@
 package ua.cn.al.teach.figures.controllers;
 
+//import com.google.gson.Gson;
+//import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -14,13 +17,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.QuadCurveTo;
+import ua.cn.al.teach.figures.shapes.ShapeFactory;
 import ua.cn.al.teach.figures.engine.FXEngine;
 import ua.cn.al.teach.figures.engine.Graphics;
 import ua.cn.al.teach.figures.enums.ShapeType;
 import ua.cn.al.teach.figures.shapes.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class MainController {
     private Sheet sheet;
@@ -30,6 +36,8 @@ public class MainController {
     private RGBColor color;
     private double lineWidth;
     private Composite selectedShapes;
+    private Deque<Sheet> undo;
+    private Deque<Sheet> redo;
 
     private Graphics graph;
     private ShapeFactory factory;
@@ -89,6 +97,10 @@ public class MainController {
         factory = ShapeFactory.getInstance();
         selectedShapes = new Composite();
 
+        undo = new LinkedList();
+        redo = new LinkedList();
+        addSheet();
+
         graph = Graphics.getInstance();
         graph.addEngine(new FXEngine(cnvs.getGraphicsContext2D()), "FXEngine");
         graph.start();
@@ -103,6 +115,7 @@ public class MainController {
         if (type != null && points != null) {
             sheet.add(shape);
             points = null;
+            addSheet();
         }
 
         Pane pane = (Pane) event.getSource();
@@ -117,19 +130,23 @@ public class MainController {
             else if (selectedShapes.getShapes().size() == 1 && selectedShapes.getShapes().get(0) instanceof Composite){
                 divorceFigures();
             }
+            addSheet();
         }
         else if (pane == pnOnTop && selectedShapes.getShapes().size() > 0){
             for (Shape s : selectedShapes.getShapes()){
                 sheet.remove(s);
                 sheet.add(s);
             }
+            addSheet();
         }
         else if (pane == pnStroke && isCtrlDownPressed == true && selectedShapes.getShapes().size() > 0){
             selectedShapes.setColor(color);
+            addSheet();
         }
         else if (pane == pnPaint && isCtrlDownPressed == true && selectedShapes.getShapes().size() > 0){
             selectedShapes.setFill(color);
             selectedShapes.setPainted(true);
+            addSheet();
         }
 
         repaint(event);
@@ -191,6 +208,22 @@ public class MainController {
         sheet.setShapes(shapeList);
 
         selectedShapes.getShapes().remove(0);
+    }
+
+    private void addSheet() {
+        try {
+            if (undo.size() > 10){
+                undo.removeFirst();
+            }
+
+            Sheet s = sheet.clone();
+            s.deselect();
+
+            undo.addLast(s);
+            redo.clear();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -266,7 +299,7 @@ public class MainController {
 
         sheet.add(shape);
         points = null;
-
+        if (selectedPane != pnSelect) addSheet();
         repaint(event);
     }
 
@@ -309,6 +342,7 @@ public class MainController {
     void changeSelectedStrokeColor(MouseEvent event){
         selectedShapes.setColor(color);
 
+        addSheet();
         paint(sheet);
     }
 
@@ -324,6 +358,7 @@ public class MainController {
     void changeSelectedStrokeWidth(MouseEvent event){
         selectedShapes.setLineWidth(lineWidth);
 
+        addSheet();
         paint(sheet);
     }
 
@@ -338,19 +373,69 @@ public class MainController {
     @FXML
     void releaseKey(KeyEvent event) {
         if ("Delete".equals(event.getCode().getName())) {
-            if (selectedShapes.getShapes().size() > 0){
-                for (Shape s : selectedShapes.getShapes()){
-                    sheet.remove(s);
-                }
-                selectedShapes.clear();
-
-                paint(sheet);
-            }
+            deleteFigures();
         }
 
         if ("Ctrl".equals(event.getCode().getName())) {
             isCtrlDownPressed = false;
         }
+
+        if ("Backspace".equals(event.getCode().getName()) || (isCtrlDownPressed && "Z".equals(event.getCode().getName()))){
+            undo();
+        }
+
+        if ("Add".equals(event.getCode().getName()) || (isCtrlDownPressed && "X".equals(event.getCode().getName()))) {
+            redo();
+        }
+    }
+
+    @FXML
+    void deleteFigures() {
+        if (selectedShapes.getShapes().size() > 0){
+            for (Shape s : selectedShapes.getShapes()){
+                sheet.remove(s);
+            }
+            selectedShapes.clear();
+
+            addSheet();
+
+            paint(sheet);
+        }
+    }
+
+    @FXML
+    void undo() {
+        if (undo.size() == 1) return;
+
+        try {
+            redo.addLast(undo.removeLast());
+            sheet = undo.getLast().clone();
+        } catch (NoSuchElementException | CloneNotSupportedException e) {
+                e.printStackTrace();
+        }
+
+        shape = null;
+        points = null;
+        selectedShapes.clear();
+        paint(sheet);
+    }
+
+    @FXML
+    void redo() {
+        if (redo.size() == 0) return;
+
+        try {
+            sheet = redo.getLast().clone();
+            undo.addLast(redo.removeLast());
+        } catch (NoSuchElementException | CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+        shape = null;
+        points = null;
+        selectedShapes.clear();
+        paint(sheet);
+        paint(sheet);
     }
 
 
@@ -406,5 +491,46 @@ public class MainController {
         path.getElements().add(quadTo);
 
         pnCurve.getChildren().add(path);
+    }
+
+    @FXML
+    void save() throws IOException, URISyntaxException {
+        sheet.deselect();
+        selectedShapes.clear();
+
+        String path = Paths.get(getClass().getResource(".").toURI()).getParent().toString();
+
+        File file = new File(path + "/save/sheet.json");
+        file.getParentFile().mkdir();
+        if (!file.exists()){
+            file.createNewFile();
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(file, sheet);
+    }
+
+    @FXML
+    void load() throws URISyntaxException, IOException {
+        String path = Paths.get(getClass().getResource(".").toURI()).getParent().toString();
+
+        File file = new File(path + "/save/sheet.json");
+
+        if (!file.exists()){
+            System.out.println("There is no any saves.");
+            return;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
+        sheet =  mapper.readValue(file, Sheet.class);
+
+        shape = null;
+        points = null;
+        selectedShapes.clear();
+        undo.clear();
+        redo.clear();
+        addSheet();
+
+        paint(sheet);
     }
 }
